@@ -1,4 +1,6 @@
 {
-    "prettier.eslintIntegration": false,
-    "editor.formatOnSave": true
-  }
+  "prettier.eslintIntegration": true,
+  "editor.formatOnSave": true,
+  "editor.snippetSuggestions": "top",
+  "react.beautify.onSave": true  
+}

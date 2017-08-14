@@ -1,4 +1,4 @@
-import React from "react";
+import React, { PropTypes } from "react";
 import { View, ScrollView, Text, StatusBar } from "react-native";
 import EStyleSheet from "react-native-extended-stylesheet";
 
@@ -12,8 +12,12 @@ const styles = EStyleSheet.create({
 });
 
 class Themes extends React.Component {
+  static propTypes = {
+    navigation: PropTypes.object
+  };
   handleThemesPress = color => {
-    console.log("Press theme: " + color);
+    //console.log("Press theme: " + color);
+    this.props.navigation.goBack();
   };
 
   render() {
@@ -52,7 +56,6 @@ class Themes extends React.Component {
           iconBackground={styles.$purple}
         />
         <Seperator />
-
       </ScrollView>
     );
   }

@@ -1,13 +1,16 @@
-import React from "react";
-import { View, Text, FlatList, StatusBar } from "react-native";
-import { ListItem, Seperator } from "../components/List";
-import currencies from "../data/currency";
+import React, { PropTypes } from 'react';
+import { View, FlatList, StatusBar } from 'react-native';
+import { ListItem, Seperator } from '../components/List';
+import currencies from '../data/currency';
 
-const TEMP_CURRENT_CURRENCY = "CAD";
+const TEMP_CURRENT_CURRENCY = 'CAD';
 
 export default class CurrencyList extends React.Component {
+  static propTypes = {
+    navigation: PropTypes.object,
+  }
   handlePress = () => {
-    console.log("row pressed");
+    this.props.navigation.goBack(null);
   };
   render() {
     return (
@@ -21,8 +24,8 @@ export default class CurrencyList extends React.Component {
               text={item}
               selected={item === TEMP_CURRENT_CURRENCY}
               onPress={this.handlePress}
-              checkmark={true}
-              visible={true}
+              checkmark
+              visible
             />
           )}
           ItemSeparatorComponent={Seperator}

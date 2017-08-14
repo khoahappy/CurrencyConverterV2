@@ -1,18 +1,26 @@
-import React from "react";
-import { ScrollView, StatusBar, Platform } from "react-native";
+import React, { PropTypes } from "react";
+import { ScrollView, StatusBar, Platform, Linking } from "react-native";
 import { ListItem, Seperator } from "../components/List";
 import { Ionicons } from "@expo/vector-icons";
+
+import { connectAlert } from "../components/Alert";
 
 const ICON_COLOR = "#868686";
 const ICON_SIZE = 23;
 const ICON_PREFIX = Platform.OS === "ios" ? "ios" : "md";
 
 class Options extends React.Component {
+  static propTypes = {
+    navigation: PropTypes.object,
+    alertWithType: PropTypes.func
+  };
   handleThemesPress = () => {
-    console.log("Press theme");
+    this.props.navigation.navigate("Themes", { title: "Themes" });
   };
   handleSitePress = () => {
-    console.log("Press site");
+    Linking.openURL("httpasdsa://fixer.io").catch(() => {
+      this.props.alertWithType("error", "Sorry", "Fixer.io cannot be opened right now");
+    });
   };
   render() {
     return (
@@ -23,7 +31,7 @@ class Options extends React.Component {
           onPress={this.handleThemesPress}
           customIcon={
             <Ionicons
-              name={`${ICON_PREFIX}-arrow-forward`} 
+              name={`${ICON_PREFIX}-arrow-forward`}
               color={ICON_COLOR}
               size={ICON_SIZE}
             />
@@ -32,9 +40,13 @@ class Options extends React.Component {
         <Seperator />
         <ListItem
           text="Fixer.io"
-          onPress={this.handleSitePressPress}
+          onPress={this.handleSitePress}
           customIcon={
-            <Ionicons name={`${ICON_PREFIX}-link`} color={ICON_COLOR} size={ICON_SIZE} />
+            <Ionicons
+              name={`${ICON_PREFIX}-link`}
+              color={ICON_COLOR}
+              size={ICON_SIZE}
+            />
           }
         />
         <Seperator />
@@ -43,4 +55,4 @@ class Options extends React.Component {
   }
 }
 
-export default Options;
+export default connectAlert(Options);
