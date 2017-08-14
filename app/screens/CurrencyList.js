@@ -1,15 +1,27 @@
-import React, { PropTypes } from 'react';
-import { View, FlatList, StatusBar } from 'react-native';
-import { ListItem, Seperator } from '../components/List';
-import currencies from '../data/currency';
+import React, { PropTypes } from "react";
+import { View, FlatList, StatusBar } from "react-native";
+import { connect } from "react-redux";
 
-const TEMP_CURRENT_CURRENCY = 'CAD';
+import { ListItem, Seperator } from "../components/List";
 
-export default class CurrencyList extends React.Component {
+import currencies from "../data/currency";
+import { changeBaseCurrency, changeQuoteCurrency } from "../actions/currencies";
+
+const TEMP_CURRENT_CURRENCY = "CAD";
+
+class CurrencyList extends React.Component {
   static propTypes = {
     navigation: PropTypes.object,
-  }
-  handlePress = () => {
+    dispatch: PropTypes.func
+  };
+  handlePress = currency => {
+    const { type } = this.props.navigation.state.params;
+    if (type === "base") {
+      this.props.dispatch(changeBaseCurrency(currency));
+    } else if (type === "quote") {
+      this.props.dispatch(changeQuoteCurrency(currency));
+    }
+
     this.props.navigation.goBack(null);
   };
   render() {
@@ -19,18 +31,18 @@ export default class CurrencyList extends React.Component {
         <FlatList
           data={currencies}
           keyExtractor={item => item}
-          renderItem={({ item }) => (
+          renderItem={({ item }) =>
             <ListItem
               text={item}
               selected={item === TEMP_CURRENT_CURRENCY}
-              onPress={this.handlePress}
+              onPress={() => this.handlePress(item)}
               checkmark
               visible
-            />
-          )}
+            />}
           ItemSeparatorComponent={Seperator}
         />
       </View>
     );
   }
 }
+export default connect()(CurrencyList);
