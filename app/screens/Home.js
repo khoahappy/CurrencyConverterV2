@@ -23,7 +23,8 @@ class Home extends React.Component {
     amount: PropTypes.number,
     conversionRate: PropTypes.number,
     isFetching: PropTypes.bool,
-    lastConversionDate: PropTypes.object
+    lastConversionDate: PropTypes.object,
+    primaryColor: PropTypes.string
   };
   handlePressBaseCurrency = () => {
     this.props.navigation.navigate("CurrencyList", { title: "Base Currency", type: "base" });
@@ -48,17 +49,18 @@ class Home extends React.Component {
     }
 
     return (
-      <Container>
+      <Container backgroundColor={this.props.primaryColor} >
         <StatusBar translucent={false} barStyle="light-content" />
         <Header onPress={this.handleOptionPress} />
         <KeyboardAvoidingView behavior="padding">
-          <Logo />
+          <Logo tintColor={this.props.primaryColor} />
           <InputWithButton
             buttonText={this.props.baseCurrency}
             onPress={this.handlePressBaseCurrency}
             keyboardType="numeric"
             defaultValue={this.props.amount.toString()}
             onChangeText={this.handleChangeText}
+            textColor={this.props.primaryColor}
           />
           <InputWithButton
             buttonText={this.props.quoteCurrency}
@@ -67,6 +69,7 @@ class Home extends React.Component {
             value={quotePrice}
             onChangeText={this.handleChangeText}
             editable={false}
+            textColor={this.props.primaryColor}
           />
           <LastConverted
             base={this.props.baseCurrency}
@@ -99,7 +102,8 @@ const mapStateToProps = state => {
     isFetching: conversionSelector.isFetching,
     lastConversionDate: conversionSelector.date
       ? new Date(conversionSelector.date)
-      : new Date()
+      : new Date(),
+      primaryColor: state.themes.primaryColor
   };
 };
 

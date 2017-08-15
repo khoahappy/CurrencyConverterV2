@@ -1,11 +1,13 @@
 import React from "react";
 import { View } from "react-native";
 import EStyleSheet from "react-native-extended-stylesheet";
-import { Provider } from "react-redux";
-import Navigator from "./config/routes";
-import { AlertProvider } from "./components/Alert";
+import { Provider, connect } from "react-redux";
+import { addNavigationHelpers } from "react-navigation";
 
+import Navigator from "./config/routes";
 import store from "./config/store";
+
+import { AlertProvider } from "./components/Alert";
 
 EStyleSheet.build({
   $primaryBlue: "#4f6d7a",
@@ -19,10 +21,16 @@ EStyleSheet.build({
   $lightGray: "#f0f0f0",
   $darkText: "#343434"
 });
+const App = ({ dispatch, nav }) =>
+  <Navigator navigation={addNavigationHelpers({ dispatch, state: nav })} />;
+const mapStateToProps = state => ({
+  nav: state.nav
+});
 
+const AppWithNavigation = connect(mapStateToProps)(App);
 export default () =>
   <Provider store={store}>
     <AlertProvider>
-      <Navigator onNavigationStateChange={null} />
+      <AppWithNavigation />
     </AlertProvider>
   </Provider>;

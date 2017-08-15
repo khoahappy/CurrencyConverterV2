@@ -100,7 +100,7 @@ const reducer = (state = initialState, action) => {
   }
 };
 
-console.log(initialState);
+//console.log(initialState);
 // console.log(reducer(initialState, swapCurrency()));
 // console.log(reducer(initialState, changeCurrencyAmount(222)));
 export default reducer;

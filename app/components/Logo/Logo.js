@@ -70,8 +70,9 @@ export default class Logo extends React.Component {
       styles.image,
       {
         width: this.imageWidth,
-        height: this.imageWidth
-      }
+        height: this.imageWidth,       
+      },
+      this.props.tintColor? {tintColor: this.props.tintColor}:null
     ];
     return (
       <View style={styles.container}>

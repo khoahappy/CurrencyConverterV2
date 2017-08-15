@@ -12,7 +12,10 @@ const TEMP_CURRENT_CURRENCY = "CAD";
 class CurrencyList extends React.Component {
   static propTypes = {
     navigation: PropTypes.object,
-    dispatch: PropTypes.func
+    dispatch: PropTypes.func,
+    baseCurrency: PropTypes.string,
+    quoteCurrency: PropTypes.string,
+    primaryColor: PropTypes.string
   };
   handlePress = currency => {
     const { type } = this.props.navigation.state.params;
@@ -25,6 +28,10 @@ class CurrencyList extends React.Component {
     this.props.navigation.goBack(null);
   };
   render() {
+    let comparisonCurrency = this.props.baseCurrency;
+    if (this.props.navigation.state.params.type === "quote") {
+      comparisonCurrency = this.props.quoteCurrency;
+    }
     return (
       <View style={{ flex: 1 }}>
         <StatusBar barStyle="default" translucent={false} />
@@ -34,10 +41,11 @@ class CurrencyList extends React.Component {
           renderItem={({ item }) =>
             <ListItem
               text={item}
-              selected={item === TEMP_CURRENT_CURRENCY}
+              selected={item === comparisonCurrency}
               onPress={() => this.handlePress(item)}
               checkmark
               visible
+              iconBackground={this.props.primaryColor}
             />}
           ItemSeparatorComponent={Seperator}
         />
@@ -45,4 +53,12 @@ class CurrencyList extends React.Component {
     );
   }
 }
-export default connect()(CurrencyList);
+
+const mapStateToProps = state => {
+  return {
+    baseCurrency: state.currencies.baseCurrency,
+    quoteCurrency: state.currencies.quoteCurrency,
+    primaryColor: state.themes.primaryColor
+  };
+};
+export default connect(mapStateToProps)(CurrencyList);
