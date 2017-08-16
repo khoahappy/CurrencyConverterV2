@@ -2,6 +2,7 @@ import React, { PropTypes } from "react";
 import { StatusBar, KeyboardAvoidingView } from "react-native";
 
 import { connect } from "react-redux";
+import { connectAlert } from "../components/Alert";
 
 import { Container } from "../components/Container";
 import { Header } from "../components/Headers";
@@ -10,7 +11,11 @@ import { InputWithButton } from "../components/TextInput";
 import { ClearButton } from "../components/Buttons";
 import { LastConverted } from "../components/Text";
 
-import { swapCurrency, changeCurrencyAmount } from "../actions/currencies";
+import {
+  swapCurrency,
+  changeCurrencyAmount,
+  getInitialConversion
+} from "../actions/currencies";
 
 const TEMP_CONVERSION_DATE = new Date();
 
@@ -24,13 +29,30 @@ class Home extends React.Component {
     conversionRate: PropTypes.number,
     isFetching: PropTypes.bool,
     lastConversionDate: PropTypes.object,
-    primaryColor: PropTypes.string
+    primaryColor: PropTypes.string,
+    alertWithType: PropTypes.func,
+    currencyError: PropTypes.string
   };
+  componentDidMount() {
+    this.props.dispatch(getInitialConversion());
+  }
+  componentWillReceiveProps(nextProps) {
+    if(nextProps.currencyError && nextProps.currencyError !== this.props.currencyErrorr){
+      this.props.alertWithType("error", 'Error', nextProps.currencyError);
+    }
+  }
+  
   handlePressBaseCurrency = () => {
-    this.props.navigation.navigate("CurrencyList", { title: "Base Currency", type: "base" });
+    this.props.navigation.navigate("CurrencyList", {
+      title: "Base Currency",
+      type: "base"
+    });
   };
   handlePressQuoteCurrency = () => {
-    this.props.navigation.navigate("CurrencyList", { title: "Quote Currency", type: "quote" });
+    this.props.navigation.navigate("CurrencyList", {
+      title: "Quote Currency",
+      type: "quote"
+    });
   };
   handleChangeText = amount => {
     this.props.dispatch(changeCurrencyAmount(amount));
@@ -49,7 +71,7 @@ class Home extends React.Component {
     }
 
     return (
-      <Container backgroundColor={this.props.primaryColor} >
+      <Container backgroundColor={this.props.primaryColor}>
         <StatusBar translucent={false} barStyle="light-content" />
         <Header onPress={this.handleOptionPress} />
         <KeyboardAvoidingView behavior="padding">
@@ -103,8 +125,9 @@ const mapStateToProps = state => {
     lastConversionDate: conversionSelector.date
       ? new Date(conversionSelector.date)
       : new Date(),
-      primaryColor: state.themes.primaryColor
+    primaryColor: state.themes.primaryColor,
+    currencyError: state.currencies.error
   };
 };
 
-export default connect(mapStateToProps)(Home);
+export default connect(mapStateToProps)(connectAlert(Home));
